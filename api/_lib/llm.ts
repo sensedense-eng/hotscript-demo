@@ -69,6 +69,20 @@ async function fetchWithTimeout(
   }
 }
 
+function buildGeminiThinkingConfig(model: string): Record<string, unknown> | undefined {
+  const lower = model.toLowerCase();
+  if (lower.includes("2.5-pro")) {
+    return { thinkingBudget: 128 };
+  }
+  if (lower.includes("2.5-flash")) {
+    return { thinkingBudget: 0 };
+  }
+  if (lower.includes("gemini-3") || lower.includes("gemini-4")) {
+    return { thinkingLevel: "LOW" };
+  }
+  return undefined;
+}
+
 async function callProviderRaw(
   config: LlmConfig,
   params: ChatJsonParams
@@ -81,30 +95,45 @@ async function callProviderRaw(
       baseUrl || "https://generativelanguage.googleapis.com"
     ).replace(/\/+$/, "");
     const url = `${host}/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    const maxOutputTokens = Math.max(maxTokens, 8192);
+    const thinkingConfig = buildGeminiThinkingConfig(model);
 
-    const res = await fetchWithTimeout(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: system }],
+    const requestGemini = async (includeThinkingConfig: boolean) => {
+      const generationConfig: Record<string, unknown> = {
+        responseMimeType: "application/json",
+        maxOutputTokens,
+        temperature: 0.4,
+      };
+      if (includeThinkingConfig && thinkingConfig) {
+        generationConfig.thinkingConfig = thinkingConfig;
+      }
+
+      return fetchWithTimeout(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
         },
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: user }],
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: system }],
           },
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          maxOutputTokens: maxTokens,
-          temperature: 0.4,
-        },
-      }),
-    });
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: user }],
+            },
+          ],
+          generationConfig,
+        }),
+      });
+    };
+
+    let res = await requestGemini(true);
+    if (res.status === 400 && thinkingConfig) {
+      // 兼容不支持 thinkingConfig 的模型版本，降级去掉该字段重试
+      res = await requestGemini(false);
+    }
 
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
@@ -113,16 +142,27 @@ async function callProviderRaw(
 
     const data = (await res.json()) as {
       candidates?: Array<{
+        finishReason?: string;
         content?: {
-          parts?: Array<{ text?: string }>;
+          parts?: Array<{ text?: string; thought?: boolean }>;
         };
       }>;
     };
 
-    const content =
-      data.candidates?.[0]?.content?.parts
-        ?.map((p) => p.text ?? "")
-        .join("") ?? "";
+    const candidate = data.candidates?.[0];
+    const parts = candidate?.content?.parts ?? [];
+    const content = parts
+      .filter((p) => !p.thought && typeof p.text === "string")
+      .map((p) => p.text ?? "")
+      .join("");
+
+    if (candidate?.finishReason === "MAX_TOKENS") {
+      console.warn("[llm:gemini] finishReason=MAX_TOKENS", {
+        model,
+        maxOutputTokens,
+        outputLength: content.length,
+      });
+    }
 
     if (!content.trim()) {
       throw new Error("Gemini API 返回空内容");
