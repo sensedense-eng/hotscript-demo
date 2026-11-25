@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import {
   Flame,
   FileText,
@@ -11,6 +11,7 @@ import {
   UtensilsCrossed,
   Clock,
 } from "lucide-react";
+import game from "@data/game.json";
 import meta from "@data/meta.json";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -39,15 +40,7 @@ const NAV_ITEMS = [
   { to: "/about", label: "方案说明", icon: Info, end: false },
 ];
 
-function getPageTitle(pathname: string): string {
-  if (pathname === "/") return "热点工作台";
-  if (pathname === "/topics") return "选题与脚本";
-  if (pathname.startsWith("/topics/")) return "脚本审阅台";
-  if (pathname === "/knowledge") return "知识库";
-  if (pathname === "/logs") return "操作日志";
-  if (pathname === "/about") return "方案说明";
-  return "热点脚本工作台";
-}
+const TOPBAR_CONTEXT_LABEL = `${game.name} · ${game.currentVersion} ${game.currentEvent.split("（")[0]}`;
 
 function formatDemoClock(iso: string): string {
   const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
@@ -60,7 +53,6 @@ function formatDemoClock(iso: string): string {
 }
 
 export function Layout() {
-  const location = useLocation();
   const [modelOnline, setModelOnline] = useState<boolean>(false);
   const [resetOpen, setResetOpen] = useState<boolean>(false);
 
@@ -88,8 +80,6 @@ export function Layout() {
     setResetOpen(false);
     window.location.href = "/";
   };
-
-  const pageTitle = getPageTitle(location.pathname);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex">
@@ -193,8 +183,8 @@ export function Layout() {
       <div className="flex-1 pl-[232px] min-w-0 flex flex-col">
         {/* 顶栏 */}
         <header className="sticky top-0 z-20 h-14 bg-white/95 border-b border-slate-200 px-6 flex items-center justify-between gap-4">
-          <div className="text-[16px] font-semibold text-slate-900 truncate">
-            {pageTitle}
+          <div className="text-[14px] font-medium text-slate-700 truncate">
+            {TOPBAR_CONTEXT_LABEL}
           </div>
 
           <div className="flex items-center gap-3 shrink-0">

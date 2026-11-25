@@ -44,7 +44,6 @@ import {
 import type {
   Hotspot,
   HotspotStatus,
-  LifecycleStage,
   MetaConfig,
   Platform,
   PlatformsConfig,
@@ -101,12 +100,8 @@ const STATUS_BADGE: Record<HotspotStatus, { label: string; className: string }> 
     },
   };
 
-const LIFECYCLE_STYLE: Record<LifecycleStage, string> = {
-  emerging: "bg-slate-50 text-slate-600 border-slate-200",
-  rising: "bg-[#F0FDFA] text-[#0F766E] border-[#99F6E4]/70",
-  peak: "bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]/70",
-  declining: "bg-[#F1F5F9] text-[#64748B] border-slate-200",
-};
+const LIFECYCLE_BADGE_CLASS =
+  "bg-slate-50 text-slate-600 border-slate-200";
 
 const RISK_META: Record<RiskLevel, { label: string; className: string }> = {
   low: {
@@ -216,9 +211,11 @@ export function HotspotDetailSheet({
   const disabledReason = getSelectDisabledReason(hotspot, status);
   const canSelect = status === "recommended";
   const remainingText =
-    status === "expired"
-      ? "已过期"
-      : formatRemainingWindow(hotspot.windowEnd, meta.demoNow);
+    status === "blocked"
+      ? "不跟进"
+      : status === "expired"
+        ? "已过期"
+        : formatRemainingWindow(hotspot.windowEnd, meta.demoNow);
 
   const chartData = hotspot.heatCurve.map((pt) => ({
     time: formatAxisTime(pt.t),
@@ -249,7 +246,7 @@ export function HotspotDetailSheet({
               variant="outline"
               className={cn(
                 "text-[12px] font-normal px-2 py-0.5 rounded-md border",
-                LIFECYCLE_STYLE[hotspot.lifecycle]
+                LIFECYCLE_BADGE_CLASS
               )}
             >
               {meta.lifecycleLabels[hotspot.lifecycle]}期
@@ -383,7 +380,7 @@ export function HotspotDetailSheet({
                 variant="outline"
                 className={cn(
                   "text-[12px] font-medium px-2 py-0.5 rounded-md border",
-                  LIFECYCLE_STYLE[hotspot.lifecycle]
+                  LIFECYCLE_BADGE_CLASS
                 )}
               >
                 当前阶段：{meta.lifecycleLabels[hotspot.lifecycle]}

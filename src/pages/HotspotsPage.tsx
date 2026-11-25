@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
   Clock,
@@ -6,6 +7,7 @@ import {
   ShieldAlert,
   Ban,
   X,
+  FileText,
 } from "lucide-react";
 import hotspotsData from "@data/hotspots.json";
 import metaData from "@data/meta.json";
@@ -14,6 +16,7 @@ import { formatRemainingWindow } from "@/core/time";
 import { useHotscriptStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HeatSparkline } from "@/components/HeatSparkline";
@@ -21,7 +24,6 @@ import { HotspotDetailSheet } from "@/components/HotspotDetailSheet";
 import type {
   Hotspot,
   HotspotStatus,
-  LifecycleStage,
   MetaConfig,
   SourcePlatform,
 } from "@/types";
@@ -32,8 +34,8 @@ const meta = metaData as MetaConfig;
 type FilterTab = "all" | "recommended" | "pending" | "blocked" | "expired";
 
 const STATUS_PRIORITY: Record<HotspotStatus, number> = {
-  recommended: 0,
-  selected: 1,
+  selected: 0,
+  recommended: 1,
   verified: 2,
   pending: 3,
   blocked: 4,
@@ -80,14 +82,10 @@ const STATUS_META: Record<
   },
 };
 
-const LIFECYCLE_STYLE: Record<LifecycleStage, string> = {
-  emerging: "bg-slate-50 text-slate-600 border-slate-200",
-  rising: "bg-[#F0FDFA] text-[#0F766E] border-[#99F6E4]/70",
-  peak: "bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]/70",
-  declining: "bg-[#F1F5F9] text-[#64748B] border-slate-200",
-};
+const LIFECYCLE_BADGE_CLASS =
+  "bg-slate-50 text-slate-600 border-slate-200";
 
-const PLATFORM_FILTER_OPTIONS: SourcePlatform[] = [
+const PLATFORM_ORDER: SourcePlatform[] = [
   "weibo",
   "douyin",
   "bilibili",
@@ -95,6 +93,10 @@ const PLATFORM_FILTER_OPTIONS: SourcePlatform[] = [
   "news",
   "official",
 ];
+
+const ACTIVE_PLATFORMS: SourcePlatform[] = PLATFORM_ORDER.filter((platform) =>
+  hotspots.some((h) => h.platforms.includes(platform))
+);
 
 interface EnrichedHotspot {
   hotspot: Hotspot;
@@ -104,6 +106,7 @@ interface EnrichedHotspot {
 }
 
 export function HotspotsPage() {
+  const navigate = useNavigate();
   const hotspotStatuses = useHotscriptStore((s) => s.hotspotStatuses);
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
   const [selectedPlatforms, setSelectedPlatforms] = useState<SourcePlatform[]>(
@@ -120,9 +123,11 @@ export function HotspotsPage() {
           meta.scoring.weights
         );
         const remainingText =
-          status === "expired"
-            ? "已过期"
-            : formatRemainingWindow(hotspot.windowEnd, meta.demoNow);
+          status === "blocked"
+            ? "不跟进"
+            : status === "expired"
+              ? "已过期"
+              : formatRemainingWindow(hotspot.windowEnd, meta.demoNow);
         return { hotspot, status, score, remainingText };
       })
       .sort((a, b) => {
@@ -311,10 +316,10 @@ export function HotspotsPage() {
           </TabsList>
         </Tabs>
 
-        {/* 平台多选 */}
+        {/* 平台多选（只显示至少有一条热点的平台） */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[13px] text-slate-500 mr-1">来源平台</span>
-          {PLATFORM_FILTER_OPTIONS.map((platform) => {
+          {ACTIVE_PLATFORMS.map((platform) => {
             const active = selectedPlatforms.includes(platform);
             return (
               <button
@@ -390,8 +395,25 @@ export function HotspotsPage() {
                 >
                   {/* 标题 + 关联平台徽标 */}
                   <div className="min-w-0 space-y-2">
-                    <div className="text-[16px] font-medium text-slate-900 truncate">
-                      {hotspot.title}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="text-[16px] font-medium text-slate-900 truncate">
+                        {hotspot.title}
+                      </div>
+                      {status === "selected" && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/topics/${hotspot.id}`);
+                          }}
+                          className="h-7 px-2.5 text-[13px] font-medium border-[#0F766E]/40 text-[#0F766E] hover:bg-[#F0FDFA] hover:text-[#0F766E] shrink-0 gap-1"
+                        >
+                          <FileText className="h-3.5 w-3.5" />
+                          <span>查看脚本</span>
+                        </Button>
+                      )}
                     </div>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {hotspot.platforms.map((p) => (
@@ -424,7 +446,7 @@ export function HotspotsPage() {
                       variant="outline"
                       className={cn(
                         "text-[12px] font-normal px-2 py-0 h-5 rounded-md border",
-                        LIFECYCLE_STYLE[hotspot.lifecycle]
+                        LIFECYCLE_BADGE_CLASS
                       )}
                     >
                       {meta.lifecycleLabels[hotspot.lifecycle]}
@@ -446,7 +468,7 @@ export function HotspotsPage() {
                     <div
                       className={cn(
                         "flex items-center gap-1.5",
-                        remainingText === "已过期"
+                        remainingText === "已过期" || remainingText === "不跟进"
                           ? "text-slate-400"
                           : "text-slate-500"
                       )}
@@ -466,38 +488,51 @@ export function HotspotsPage() {
                   </div>
 
                   {/* 适配总分 + 细进度条 */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-baseline justify-between">
-                      <span
-                        className={cn(
-                          "text-[22px] font-semibold tracking-tight tabular-nums leading-none",
-                          isMuted
-                            ? "text-slate-400"
-                            : score >= meta.scoring.threshold
-                              ? "text-slate-900"
-                              : "text-slate-600"
-                        )}
-                      >
-                        {score}
-                      </span>
-                      <span className="text-[13px] text-slate-400 tabular-nums">
-                        / 100
-                      </span>
+                  {status === "blocked" ? (
+                    <div className="space-y-1.5">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-[22px] font-semibold tracking-tight text-slate-400 tabular-nums leading-none">
+                          —
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden" />
                     </div>
-                    <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
-                      <div
-                        className={cn(
-                          "h-full rounded-full transition-all duration-200",
-                          isMuted
-                            ? "bg-slate-300"
-                            : score >= meta.scoring.threshold
-                              ? "bg-[#0F766E]"
-                              : "bg-slate-400"
-                        )}
-                        style={{ width: `${Math.min(100, Math.max(0, score))}%` }}
-                      />
+                  ) : (
+                    <div className="space-y-1.5">
+                      <div className="flex items-baseline justify-between">
+                        <span
+                          className={cn(
+                            "text-[22px] font-semibold tracking-tight tabular-nums leading-none",
+                            isMuted
+                              ? "text-slate-400"
+                              : score >= meta.scoring.threshold
+                                ? "text-slate-900"
+                                : "text-slate-600"
+                          )}
+                        >
+                          {score}
+                        </span>
+                        <span className="text-[13px] text-slate-400 tabular-nums">
+                          / 100
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div
+                          className={cn(
+                            "h-full rounded-full transition-all duration-200",
+                            isMuted
+                              ? "bg-slate-300"
+                              : score >= meta.scoring.threshold
+                                ? "bg-[#0F766E]"
+                                : "bg-slate-400"
+                          )}
+                          style={{
+                            width: `${Math.min(100, Math.max(0, score))}%`,
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* 详情指示箭头 */}
                   <div className="flex justify-end text-slate-400">
