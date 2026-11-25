@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getLlmConfig } from "./_lib/llm";
+import { getLlmConfig } from "./_lib/llm.js";
 
 export default function handler(_req: VercelRequest, res: VercelResponse) {
   const config = getLlmConfig();

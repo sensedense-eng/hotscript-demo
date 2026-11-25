@@ -8,7 +8,7 @@ import {
   type Platform,
   type ReviewIssue,
   type Script,
-} from "./data";
+} from "./data.js";
 
 function formatAllowedCards(): string {
   const cards = getAllowedGameCards();

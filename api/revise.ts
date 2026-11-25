@@ -4,10 +4,10 @@ import {
   normalizeScript,
   type ReviewIssue,
   type Script,
-} from "./_lib/data";
-import { chatJSON, getLlmConfig } from "./_lib/llm";
-import { buildRevisePrompt } from "./_lib/prompts";
-import { checkRateLimit } from "./_lib/ratelimit";
+} from "./_lib/data.js";
+import { chatJSON, getLlmConfig } from "./_lib/llm.js";
+import { buildRevisePrompt } from "./_lib/prompts.js";
+import { checkRateLimit } from "./_lib/ratelimit.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
