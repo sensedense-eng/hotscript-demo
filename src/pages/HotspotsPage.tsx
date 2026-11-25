@@ -16,14 +16,8 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { HeatSparkline } from "@/components/HeatSparkline";
+import { HotspotDetailSheet } from "@/components/HotspotDetailSheet";
 import type {
   Hotspot,
   HotspotStatus,
@@ -516,26 +510,12 @@ export function HotspotsPage() {
         )}
       </div>
 
-      {/* 右侧空 Sheet（T3 实现完整热点详情） */}
-      <Sheet
-        open={Boolean(activeItem)}
-        onOpenChange={(open) => {
-          if (!open) setActiveHotspotId(null);
-        }}
-      >
-        <SheetContent className="w-[640px] sm:max-w-[640px]">
-          {activeItem && (
-            <SheetHeader>
-              <SheetTitle className="text-[18px] font-semibold text-slate-900">
-                {activeItem.hotspot.title}
-              </SheetTitle>
-              <SheetDescription className="text-[14px] text-slate-500">
-                {activeItem.hotspot.summary}
-              </SheetDescription>
-            </SheetHeader>
-          )}
-        </SheetContent>
-      </Sheet>
+      {/* 右侧热点详情抽屉 */}
+      <HotspotDetailSheet
+        hotspot={activeItem?.hotspot ?? null}
+        status={activeItem?.status ?? null}
+        onClose={() => setActiveHotspotId(null)}
+      />
     </div>
   );
 }
