@@ -1,0 +1,39 @@
+{
+  "demoNow": "2026-11-25T20:00:00+08:00",
+  "gameVersion": "2.2",
+  "maxRevisionRounds": 3,
+  "initialSelected": [
+    "h01"
+  ],
+  "scoring": {
+    "threshold": 60,
+    "weights": {
+      "relevance": 0.35,
+      "heat": 0.2,
+      "timeliness": 0.2,
+      "risk": 0.15,
+      "tone": 0.1
+    },
+    "labels": {
+      "relevance": "游戏相关度",
+      "heat": "热度",
+      "timeliness": "时效",
+      "risk": "安全度",
+      "tone": "品牌调性"
+    }
+  },
+  "lifecycleLabels": {
+    "emerging": "萌芽",
+    "rising": "上升",
+    "peak": "高峰",
+    "declining": "衰退"
+  },
+  "platformLabels": {
+    "weibo": "微博",
+    "douyin": "抖音",
+    "bilibili": "B站",
+    "xiaohongshu": "小红书",
+    "news": "资讯",
+    "official": "官方通报"
+  }
+}

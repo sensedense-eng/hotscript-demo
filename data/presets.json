@@ -1,0 +1,298 @@
+{
+  "h01": {
+    "final": {
+      "id": "s-h01-final",
+      "hotspotId": "h01",
+      "platform": "douyin",
+      "version": 2,
+      "source": "preset",
+      "title": "初雪了，云屿食堂开出第一锅热汤",
+      "coverText": "初雪第一锅热汤",
+      "hook": "窗外下雪的第一秒，你最想喝什么？",
+      "shots": [
+        {
+          "start": 0,
+          "end": 3,
+          "visual": "实拍窗外飘雪，转场到游戏内云屿雪景",
+          "line": "窗外下雪的第一秒，你最想喝什么？",
+          "subtitle": "下雪了！",
+          "evidenceRef": "h01-e1"
+        },
+        {
+          "start": 3,
+          "end": 10,
+          "visual": "阿棠推开食堂大门，雪花落在门帘上",
+          "line": "阿棠：开饭啦！今天有初雪限定！",
+          "subtitle": "初雪限定上线"
+        },
+        {
+          "start": 10,
+          "end": 20,
+          "visual": "烹饪小游戏特写：「初雪热汤」火候条拉满",
+          "line": "阿棠：火候我来，热汤马上好～",
+          "subtitle": "初雪热汤 · 限时菜谱"
+        },
+        {
+          "start": 20,
+          "end": 32,
+          "visual": "墨白端出雪绒包，尾巴一甩",
+          "line": "墨白：……排队。哼。",
+          "subtitle": "墨白：排队"
+        },
+        {
+          "start": 32,
+          "end": 40,
+          "visual": "旅人们围坐喝汤，镜头拉远到雪中的岛屿",
+          "line": "今年的初雪，来云屿喝一碗热汤吧。",
+          "subtitle": "评论区说说你那里下雪了吗"
+        }
+      ],
+      "endCard": "适龄提示：12+ ｜ 抵制不良游戏，拒绝盗版游戏 ｜ 云屿食堂 初雪庆典进行中",
+      "bgm": "轻快钢琴 + 铃铛，结尾放慢",
+      "evidenceRefs": [
+        "h01-e1",
+        "h01-e2"
+      ],
+      "createdAt": "2026-11-25T19:58:00+08:00"
+    },
+    "finalReview": {
+      "scores": {
+        "consistency": 5,
+        "persona": 5,
+        "hook": 4,
+        "platformFit": 5
+      },
+      "issues": [],
+      "summary": "设定与人设准确，钩子清晰，符合抖音节奏。",
+      "passed": true
+    }
+  },
+  "h10": {
+    "v1": {
+      "id": "s-h10-v1",
+      "hotspotId": "h10",
+      "platform": "douyin",
+      "version": 1,
+      "source": "preset",
+      "title": "墨白的雪地梅花印，最治愈的一天",
+      "coverText": "猫猫踩梅花",
+      "hook": "你见过会踩梅花的猫吗？",
+      "shots": [
+        {
+          "start": 0,
+          "end": 4,
+          "visual": "橘猫雪地梅花印画面（二创风格重绘）",
+          "line": "你见过会踩梅花的猫吗？",
+          "subtitle": "会踩梅花的猫",
+          "evidenceRef": "h10-e1"
+        },
+        {
+          "start": 4,
+          "end": 16,
+          "visual": "墨白站在食堂门口的雪地上，左看右看",
+          "line": "原来墨白小时候也是一只橘猫！",
+          "subtitle": "墨白的秘密"
+        },
+        {
+          "start": 16,
+          "end": 34,
+          "visual": "墨白在雪地里来回走，留下一串梅花印",
+          "line": "墨白：……一步，两步。哼。",
+          "subtitle": "梅花印 get"
+        },
+        {
+          "start": 34,
+          "end": 52,
+          "visual": "阿棠追出来，看到满地梅花印，笑出声",
+          "line": "阿棠：墨白！这是今天最治愈的画面！",
+          "subtitle": "最治愈的一天"
+        },
+        {
+          "start": 52,
+          "end": 68,
+          "visual": "两人回到食堂喝初雪热汤",
+          "line": "初雪庆典进行中，快来云屿看雪吧！",
+          "subtitle": "初雪庆典"
+        }
+      ],
+      "endCard": "云屿食堂 · 初雪庆典进行中",
+      "bgm": "可爱拨弦 + 踩雪音效",
+      "evidenceRefs": [
+        "h10-e1"
+      ],
+      "createdAt": "2026-11-25T20:02:00+08:00"
+    },
+    "v1Review": {
+      "scores": {
+        "consistency": 2,
+        "persona": 3,
+        "hook": 4,
+        "platformFit": 3
+      },
+      "issues": [
+        {
+          "category": "设定一致性",
+          "severity": "high",
+          "location": "镜头 2 台词",
+          "detail": "称墨白小时候是橘猫，与设定「黑白双色毛」冲突。",
+          "suggestion": "删除该句，改为墨白看到视频后不服气，也想踩梅花。"
+        },
+        {
+          "category": "角色人设",
+          "severity": "medium",
+          "location": "镜头 4",
+          "detail": "阿棠的台词偏夸张，像广告语，不像角色口吻。",
+          "suggestion": "改成阿棠自然的反应，并保留口头禅。"
+        },
+        {
+          "category": "平台适配",
+          "severity": "medium",
+          "location": "整体",
+          "detail": "总时长 68 秒，超过抖音建议上限；结尾缺少互动问题。",
+          "suggestion": "压缩到 45 秒左右，结尾加互动提问。"
+        },
+        {
+          "category": "表达",
+          "severity": "medium",
+          "location": "标题、镜头 4",
+          "detail": "使用「最治愈」等绝对化表述。",
+          "suggestion": "改为「好治愈」或去掉比较级。"
+        }
+      ],
+      "summary": "钩子不错，但有设定错误、时长超限和绝对化用语，需要修订。",
+      "passed": false
+    },
+    "v2": {
+      "id": "s-h10-v2",
+      "hotspotId": "h10",
+      "platform": "douyin",
+      "version": 2,
+      "source": "preset",
+      "title": "墨白看完梅花印视频，不服气了",
+      "coverText": "墨白也要踩梅花",
+      "hook": "你见过会踩梅花的猫吗？",
+      "shots": [
+        {
+          "start": 0,
+          "end": 3,
+          "visual": "雪地梅花印画面（二创风格重绘）",
+          "line": "你见过会踩梅花的猫吗？",
+          "subtitle": "会踩梅花的猫",
+          "evidenceRef": "h10-e1"
+        },
+        {
+          "start": 3,
+          "end": 10,
+          "visual": "墨白盯着手机里的视频，耳朵一动",
+          "line": "墨白：……这有什么难的。哼。",
+          "subtitle": "墨白不服气"
+        },
+        {
+          "start": 10,
+          "end": 24,
+          "visual": "墨白在食堂门口雪地里认真走步，黑白脚印歪歪扭扭",
+          "line": "墨白：一步。两步。……再来。",
+          "subtitle": "梅花印挑战中",
+          "evidenceRef": "h10-e2"
+        },
+        {
+          "start": 24,
+          "end": 36,
+          "visual": "阿棠端着初雪热汤出来，看着满地歪脚印笑了",
+          "line": "阿棠：开饭啦！梅花大师先喝口汤暖暖爪子～",
+          "subtitle": "初雪热汤 · 限时菜谱"
+        },
+        {
+          "start": 36,
+          "end": 45,
+          "visual": "墨白别过头喝汤，镜头拉远到雪中的食堂",
+          "line": "你家猫踩出过梅花印吗？评论区晒晒！",
+          "subtitle": "评论区晒猫"
+        }
+      ],
+      "endCard": "适龄提示：12+ ｜ 抵制不良游戏，拒绝盗版游戏 ｜ 云屿食堂 初雪庆典进行中",
+      "bgm": "可爱拨弦 + 踩雪音效，结尾转温暖钢琴",
+      "evidenceRefs": [
+        "h10-e1",
+        "h10-e2"
+      ],
+      "createdAt": "2026-11-25T20:04:00+08:00"
+    },
+    "v2Review": {
+      "scores": {
+        "consistency": 5,
+        "persona": 5,
+        "hook": 4,
+        "platformFit": 5
+      },
+      "issues": [
+        {
+          "category": "表达",
+          "severity": "low",
+          "location": "镜头 1",
+          "detail": "热点画面需使用二创重绘，避免直接搬运原视频。",
+          "suggestion": "保持重绘方案，发布前确认素材授权。"
+        }
+      ],
+      "summary": "设定错误已修正，人设准确，时长和互动符合抖音要求。",
+      "passed": true
+    },
+    "v1Changes": [],
+    "v2Changes": [
+      "删除「墨白小时候是橘猫」，改为墨白不服气想挑战",
+      "总时长从 68 秒压缩到 45 秒",
+      "去掉「最治愈」等绝对化表述",
+      "片尾补齐适龄提示与健康游戏忠告",
+      "结尾加入互动提问"
+    ]
+  },
+  "h08": {
+    "v1": {
+      "id": "s-h08-v1",
+      "hotspotId": "h08",
+      "platform": "xiaohongshu",
+      "version": 1,
+      "source": "preset",
+      "title": "食堂里的饺子派和汤圆派",
+      "coverText": "冬至吃什么",
+      "hook": "冬至到底吃饺子还是汤圆？",
+      "shots": [
+        {
+          "start": 0,
+          "end": 4,
+          "visual": "食堂长桌两边，一边饺子一边汤圆",
+          "line": "冬至到底吃饺子还是汤圆？",
+          "subtitle": "饺子派 vs 汤圆派",
+          "evidenceRef": "h08-e1"
+        },
+        {
+          "start": 4,
+          "end": 16,
+          "visual": "小满举着两个碗跑来跑去",
+          "line": "小满：饺子圆圆滚滚，汤圆软软糯糯，都想吃！",
+          "subtitle": "小满：都想吃"
+        },
+        {
+          "start": 16,
+          "end": 30,
+          "visual": "墨白默默把两样都端上桌",
+          "line": "墨白：……都做了。哼。",
+          "subtitle": "墨白：都做了"
+        },
+        {
+          "start": 30,
+          "end": 42,
+          "visual": "画面一转，挂满灯笼的码头（预告画面）",
+          "line": "下个版本的冬至灯会，灯娘也会来食堂哦！",
+          "subtitle": "冬至灯会预告"
+        }
+      ],
+      "endCard": "适龄提示：12+ ｜ 云屿食堂",
+      "bgm": "民乐小调",
+      "evidenceRefs": [
+        "h08-e1"
+      ],
+      "createdAt": "2026-11-25T20:06:00+08:00"
+    }
+  }
+}

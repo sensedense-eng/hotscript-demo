@@ -1,0 +1,149 @@
+{
+  "name": "云屿食堂",
+  "genre": "治愈系模拟经营 + 轻冒险手游",
+  "tagline": "在云上，开一家食堂",
+  "currentVersion": "2.2",
+  "currentEvent": "初雪庆典（11月20日—12月10日）",
+  "ageRating": "12+",
+  "audience": "18—30 岁，喜欢轻松治愈、美食和萌系角色的玩家",
+  "tone": "温暖、轻幽默、有生活感；不制造焦虑，不渲染付费",
+  "cards": [
+    {
+      "id": "c01",
+      "type": "世界观",
+      "name": "云屿",
+      "summary": "漂浮在云海中的群岛。旅人乘坐云鲸往来，每座岛都有自己的食材和节令。",
+      "source": "世界观设定集 v2.0 · 第1章",
+      "effectiveVersion": "1.0",
+      "confidentiality": "public",
+      "keywords": [
+        "云屿",
+        "云鲸"
+      ],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c02",
+      "type": "角色",
+      "name": "阿棠",
+      "summary": "食堂店长，人类女孩。元气乐观，口头禅「开饭啦！」，最擅长掌控火候。",
+      "source": "角色设定卡 · 阿棠 v2.1",
+      "effectiveVersion": "1.0",
+      "confidentiality": "public",
+      "keywords": [
+        "阿棠"
+      ],
+      "forbiddenClaims": [
+        "阿棠.{0,6}(不会做饭|厨艺很差)"
+      ]
+    },
+    {
+      "id": "c03",
+      "type": "角色",
+      "name": "墨白",
+      "summary": "猫族主厨，黑白双色毛。话少、傲娇，常用短句，爱以「……哼。」收尾。怕水，不会游泳。",
+      "source": "角色设定卡 · 墨白 v2.1",
+      "effectiveVersion": "1.0",
+      "confidentiality": "public",
+      "keywords": [
+        "墨白"
+      ],
+      "forbiddenClaims": [
+        "墨白.{0,10}(橘猫|橘色|黄色的?猫)",
+        "墨白.{0,10}(游泳|下水|戏水)"
+      ]
+    },
+    {
+      "id": "c04",
+      "type": "角色",
+      "name": "小满",
+      "summary": "采集向导，喜欢收集形状奇怪的云朵。话多，说话爱用叠词。",
+      "source": "角色设定卡 · 小满 v2.0",
+      "effectiveVersion": "1.2",
+      "confidentiality": "public",
+      "keywords": [
+        "小满"
+      ],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c05",
+      "type": "角色",
+      "name": "霁先生",
+      "summary": "神秘旅商，说话文雅，总在节令交替时出现在码头。",
+      "source": "角色设定卡 · 霁先生 v2.0",
+      "effectiveVersion": "2.0",
+      "confidentiality": "public",
+      "keywords": [
+        "霁先生"
+      ],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c06",
+      "type": "版本活动",
+      "name": "初雪庆典",
+      "summary": "2.2 版本限时活动：限时菜谱「初雪热汤」「雪绒包」，岛屿可换雪景装扮。",
+      "source": "2.2 版本公告",
+      "effectiveVersion": "2.2",
+      "confidentiality": "public",
+      "keywords": [
+        "初雪庆典",
+        "初雪热汤",
+        "雪绒包"
+      ],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c07",
+      "type": "玩法",
+      "name": "核心玩法",
+      "summary": "经营食堂、出岛采集食材、烹饪小游戏、和角色一起过节令。",
+      "source": "玩法说明 v2.0",
+      "effectiveVersion": "1.0",
+      "confidentiality": "public",
+      "keywords": [],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c08",
+      "type": "品牌规范",
+      "name": "表达规范",
+      "summary": "不贬低其他游戏或品牌；不渲染付费与抽取；不制造焦虑；提到其他品牌时不出现品牌名。",
+      "source": "市场部品牌手册 2026",
+      "effectiveVersion": "—",
+      "confidentiality": "internal",
+      "keywords": [],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c09",
+      "type": "版本活动",
+      "name": "2.3 冬至灯会（未公开）",
+      "summary": "2.3 版本主活动与新角色「灯娘」，计划 12 月 18 日公布。",
+      "source": "2.3 版本规划（内部）",
+      "effectiveVersion": "2.3",
+      "confidentiality": "unreleased",
+      "keywords": [
+        "冬至灯会",
+        "灯娘",
+        "2.3版本",
+        "2.3 版本"
+      ],
+      "forbiddenClaims": []
+    },
+    {
+      "id": "c10",
+      "type": "剧情",
+      "name": "霁先生的身份（未公开）",
+      "summary": "主线第六章揭示：霁先生是云屿的前任岛主。",
+      "source": "主线剧本 · 第六章（内部）",
+      "effectiveVersion": "2.4",
+      "confidentiality": "unreleased",
+      "keywords": [
+        "前任岛主"
+      ],
+      "forbiddenClaims": []
+    }
+  ]
+}

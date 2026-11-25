@@ -1,0 +1,45 @@
+{
+  "douyin": {
+    "name": "抖音",
+    "durationSec": {
+      "min": 15,
+      "max": 60
+    },
+    "titleMaxChars": 30,
+    "coverMaxChars": 12,
+    "aspect": "9:16",
+    "requiredNotices": [
+      "适龄提示：12+",
+      "抵制不良游戏，拒绝盗版游戏"
+    ],
+    "style": "前 3 秒必须有钩子；节奏快，字幕大；结尾留互动问题"
+  },
+  "bilibili": {
+    "name": "B站",
+    "durationSec": {
+      "min": 30,
+      "max": 180
+    },
+    "titleMaxChars": 40,
+    "coverMaxChars": 16,
+    "aspect": "16:9",
+    "requiredNotices": [
+      "适龄提示：12+"
+    ],
+    "style": "可以有完整小故事；允许玩梗但要自然；结尾引导三连"
+  },
+  "xiaohongshu": {
+    "name": "小红书",
+    "durationSec": {
+      "min": 15,
+      "max": 60
+    },
+    "titleMaxChars": 20,
+    "coverMaxChars": 14,
+    "aspect": "3:4",
+    "requiredNotices": [
+      "适龄提示：12+"
+    ],
+    "style": "生活方式口吻；画面要好看；标题像真实分享"
+  }
+}
