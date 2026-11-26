@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Clock,
   Download,
+  HelpCircle,
   History,
   Loader2,
   Music,
@@ -363,16 +364,32 @@ export function TopicDetailPage() {
                 <span>{isRunning ? "流水线运行中…" : "生成脚本"}</span>
               </Button>
               {hotspot.id === "h10" && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isRunning}
-                  onClick={() => handleStartPipeline(true)}
-                  className="h-9 px-3.5 border-slate-300 text-slate-700 hover:bg-slate-50 gap-1.5"
-                >
-                  <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
-                  <span>演示：拦截有问题的初稿</span>
-                </Button>
+                <div className="inline-flex items-center gap-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isRunning}
+                    onClick={() => handleStartPipeline(true)}
+                    className="h-9 px-3.5 border-slate-300 text-slate-700 hover:bg-slate-50 gap-1.5"
+                  >
+                    <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
+                    <span>演示：拦截有问题的初稿</span>
+                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label="演示说明"
+                        className="h-8 w-8 rounded-lg inline-flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                      >
+                        <HelpCircle className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-[13px] max-w-[280px]">
+                      载入一份含设定错误的初稿，观察程序拦截与模型修订
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               )}
             </>
           )}
@@ -513,15 +530,31 @@ export function TopicDetailPage() {
                 <span>生成脚本</span>
               </Button>
               {hotspot.id === "h10" && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleStartPipeline(true)}
-                  className="border-slate-300 text-slate-700 hover:bg-slate-50 gap-1.5"
-                >
-                  <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
-                  <span>演示：拦截有问题的初稿</span>
-                </Button>
+                <div className="inline-flex items-center gap-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleStartPipeline(true)}
+                    className="border-slate-300 text-slate-700 hover:bg-slate-50 gap-1.5"
+                  >
+                    <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
+                    <span>演示：拦截有问题的初稿</span>
+                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label="演示说明"
+                        className="h-8 w-8 rounded-lg inline-flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                      >
+                        <HelpCircle className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-[13px] max-w-[280px]">
+                      载入一份含设定错误的初稿，观察程序拦截与模型修订
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               )}
             </div>
           )}

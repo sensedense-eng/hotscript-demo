@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import {
   Flame,
@@ -77,6 +77,7 @@ export function Layout() {
 
   const handleResetDemo = () => {
     localStorage.removeItem("hotscript-demo-v1");
+    localStorage.removeItem("hotscript-demo-guide-dismissed");
     setResetOpen(false);
     window.location.href = "/";
   };
@@ -225,7 +226,19 @@ export function Layout() {
 
         {/* 内容区（最大宽 1280px 居中） */}
         <main className="flex-1 w-full max-w-[1280px] mx-auto px-6 py-6">
-          <Outlet />
+          <Suspense
+            fallback={
+              <div className="space-y-5 animate-pulse">
+                <div className="space-y-2">
+                  <div className="h-7 w-40 rounded-md bg-slate-200/80" />
+                  <div className="h-4 w-72 rounded-md bg-slate-200/60" />
+                </div>
+                <div className="h-64 rounded-[12px] bg-white border border-slate-200" />
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

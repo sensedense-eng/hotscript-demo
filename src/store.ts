@@ -465,6 +465,7 @@ export const useHotscriptStore = create<HotscriptState>()(
       resetDemo: () => {
         if (typeof window !== "undefined" && window.localStorage) {
           window.localStorage.removeItem(STORE_KEY);
+          window.localStorage.removeItem("hotscript-demo-guide-dismissed");
         }
         set(getInitialData());
       },

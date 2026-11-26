@@ -1,13 +1,29 @@
+import { lazy } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { Layout } from "@/components/Layout";
-import { HotspotsPage } from "@/pages/HotspotsPage";
-import { TopicsPage } from "@/pages/TopicsPage";
-import { TopicDetailPage } from "@/pages/TopicDetailPage";
-import { KnowledgePage } from "@/pages/KnowledgePage";
-import { LogsPage } from "@/pages/LogsPage";
-import { AboutPage } from "@/pages/AboutPage";
+
+const HotspotsPage = lazy(() =>
+  import("@/pages/HotspotsPage").then((m) => ({ default: m.HotspotsPage }))
+);
+const TopicsPage = lazy(() =>
+  import("@/pages/TopicsPage").then((m) => ({ default: m.TopicsPage }))
+);
+const TopicDetailPage = lazy(() =>
+  import("@/pages/TopicDetailPage").then((m) => ({
+    default: m.TopicDetailPage,
+  }))
+);
+const KnowledgePage = lazy(() =>
+  import("@/pages/KnowledgePage").then((m) => ({ default: m.KnowledgePage }))
+);
+const LogsPage = lazy(() =>
+  import("@/pages/LogsPage").then((m) => ({ default: m.LogsPage }))
+);
+const AboutPage = lazy(() =>
+  import("@/pages/AboutPage").then((m) => ({ default: m.AboutPage }))
+);
 
 export function App() {
   return (

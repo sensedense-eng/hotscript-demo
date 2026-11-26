@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowRight,
   ChevronRight,
   Clock,
   ShieldCheck,
@@ -105,6 +106,8 @@ interface EnrichedHotspot {
   remainingText: string;
 }
 
+const GUIDE_DISMISSED_KEY = "hotscript-demo-guide-dismissed";
+
 export function HotspotsPage() {
   const navigate = useNavigate();
   const hotspotStatuses = useHotscriptStore((s) => s.hotspotStatuses);
@@ -113,6 +116,17 @@ export function HotspotsPage() {
     []
   );
   const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
+  const [guideDismissed, setGuideDismissed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(GUIDE_DISMISSED_KEY) === "1";
+  });
+
+  const handleDismissGuide = () => {
+    setGuideDismissed(true);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(GUIDE_DISMISSED_KEY, "1");
+    }
+  };
 
   const enrichedList = useMemo<EnrichedHotspot[]>(() => {
     return hotspots
@@ -211,6 +225,41 @@ export function HotspotsPage() {
           </p>
         </div>
       </div>
+
+      {/* 顶部体验引导卡（高度 ≤ 72px，可关闭，重置演示后重新出现） */}
+      {!guideDismissed && (
+        <div className="rounded-[12px] border border-[#99F6E4] bg-[#F0FDFA] px-5 py-3 max-h-[72px] flex items-center justify-between gap-4">
+          <div className="min-w-0 flex items-center gap-3 flex-wrap sm:flex-nowrap">
+            <span className="text-[14px] font-semibold text-[#0F766E] shrink-0">
+              三步体验完整流程
+            </span>
+            <span className="text-slate-300 hidden sm:inline">|</span>
+            <span className="text-[13px] text-slate-700 truncate">
+              确认橘猫热点为选题 → 生成脚本或演示拦截 → 终稿确认
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setActiveHotspotId("h10")}
+              className="h-8 px-3.5 text-[13px] bg-[#0F766E] hover:bg-[#115E59] text-white gap-1"
+            >
+              <span>从这里开始</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Button>
+            <button
+              type="button"
+              aria-label="关闭引导"
+              onClick={handleDismissGuide}
+              className="h-8 w-8 rounded-lg inline-flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-[#CCFBF1]/60 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 顶部 4 个统计卡 */}
       <div className="grid grid-cols-4 gap-4">

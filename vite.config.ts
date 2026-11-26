@@ -10,4 +10,15 @@ export default defineConfig({
       "@data": path.resolve(__dirname, "./data"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-recharts": ["recharts"],
+          "vendor-markdown": ["react-markdown", "remark-gfm"],
+        },
+      },
+    },
+  },
 });
