@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   AlertTriangle,
@@ -149,6 +149,7 @@ export function TopicDetailPage() {
   const [returnMode, setReturnMode] = useState(false);
   const [humanNote, setHumanNote] = useState("");
   const [isRunning, setIsRunning] = useState(false);
+  const finalConfirmRef = useRef<HTMLDivElement | null>(null);
 
   // 当新版本产生或切换热点时，自动切到最新版本
   const latestVersion =
@@ -278,6 +279,12 @@ export function TopicDetailPage() {
         setProgress(next);
       });
       toast.success("已按你的意见完成修订并重新核查");
+      window.setTimeout(() => {
+        finalConfirmRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 80);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "退回修订失败");
     } finally {
@@ -746,8 +753,32 @@ export function TopicDetailPage() {
             </Card>
 
             {/* D. 终稿确认（人工节点②） */}
+            {(session.scriptStatus === "revising" ||
+              session.scriptStatus === "checking" ||
+              session.scriptStatus === "returned") &&
+              session.versions.length > 0 && (
+                <Card
+                  ref={finalConfirmRef}
+                  className="rounded-[12px] border border-[#99F6E4] bg-[#F0FDFA]/60 p-5 shadow-sm flex items-center gap-3"
+                >
+                  <Loader2 className="h-5 w-5 text-[#0F766E] animate-spin shrink-0" />
+                  <div className="space-y-0.5">
+                    <div className="text-[15px] font-semibold text-[#0F766E]">
+                      正在修订并重新检查脚本…
+                    </div>
+                    <div className="text-[13px] text-slate-600">
+                      {progress?.activeMessage ||
+                        "新版本生成与核查完成后，将自动定位到终稿确认区。"}
+                    </div>
+                  </div>
+                </Card>
+              )}
+
             {session.scriptStatus === "pending_final" && (
-              <Card className="rounded-[12px] border border-[#0F766E] bg-white p-5 shadow-sm space-y-4">
+              <Card
+                ref={finalConfirmRef}
+                className="rounded-[12px] border border-[#0F766E] bg-white p-5 shadow-sm space-y-4"
+              >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[16px] font-semibold text-[#0F766E]">
                     需要你确认
