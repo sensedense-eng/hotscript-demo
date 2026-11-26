@@ -231,14 +231,22 @@ export function TopicDetailPage() {
     return INITIAL_PIPELINE_STEPS;
   }, [progress, session.scriptStatus, session.revisions.length, session.unresolvedWarning]);
 
-  const handleStartPipeline = async () => {
+  const handleStartPipeline = async (useFlawedPresetV1 = false) => {
     if (isRunning) return;
     setIsRunning(true);
     try {
-      await runGenerationPipeline(hotspot.id, (next) => {
-        setProgress(next);
-      });
-      toast.success("脚本生成与核查流水线已完成");
+      await runGenerationPipeline(
+        hotspot.id,
+        (next) => {
+          setProgress(next);
+        },
+        { useFlawedPresetV1 }
+      );
+      toast.success(
+        useFlawedPresetV1
+          ? "拦截与自动修订演示已完成"
+          : "脚本生成与核查流水线已完成"
+      );
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "流水线执行失败");
     } finally {
@@ -338,21 +346,35 @@ export function TopicDetailPage() {
           )}
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
           {session.scriptStatus === "idle" && (
-            <Button
-              type="button"
-              disabled={isRunning}
-              onClick={handleStartPipeline}
-              className="h-9 px-4 bg-[#0F766E] hover:bg-[#115E59] text-white gap-1.5"
-            >
-              {isRunning ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Play className="h-4 w-4" />
+            <>
+              <Button
+                type="button"
+                disabled={isRunning}
+                onClick={() => handleStartPipeline(false)}
+                className="h-9 px-4 bg-[#0F766E] hover:bg-[#115E59] text-white gap-1.5"
+              >
+                {isRunning ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+                <span>{isRunning ? "流水线运行中…" : "生成脚本"}</span>
+              </Button>
+              {hotspot.id === "h10" && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isRunning}
+                  onClick={() => handleStartPipeline(true)}
+                  className="h-9 px-3.5 border-slate-300 text-slate-700 hover:bg-slate-50 gap-1.5"
+                >
+                  <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
+                  <span>演示：拦截有问题的初稿</span>
+                </Button>
               )}
-              <span>{isRunning ? "流水线运行中…" : "生成脚本"}</span>
-            </Button>
+            </>
           )}
 
           {session.scriptStatus === "approved" && activeScript && (
@@ -481,14 +503,27 @@ export function TopicDetailPage() {
             </p>
           </div>
           {!isRunning && (
-            <Button
-              type="button"
-              onClick={handleStartPipeline}
-              className="bg-[#0F766E] hover:bg-[#115E59] text-white gap-1.5"
-            >
-              <Play className="h-4 w-4" />
-              <span>生成脚本</span>
-            </Button>
+            <div className="flex items-center justify-center gap-2.5 flex-wrap">
+              <Button
+                type="button"
+                onClick={() => handleStartPipeline(false)}
+                className="bg-[#0F766E] hover:bg-[#115E59] text-white gap-1.5"
+              >
+                <Play className="h-4 w-4" />
+                <span>生成脚本</span>
+              </Button>
+              {hotspot.id === "h10" && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handleStartPipeline(true)}
+                  className="border-slate-300 text-slate-700 hover:bg-slate-50 gap-1.5"
+                >
+                  <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
+                  <span>演示：拦截有问题的初稿</span>
+                </Button>
+              )}
+            </div>
           )}
         </Card>
       ) : (
@@ -514,7 +549,7 @@ export function TopicDetailPage() {
                           v{ver.version}
                         </span>
                         <span className="text-slate-400">
-                          {SOURCE_LABELS[ver.source]}
+                          {ver.sourceLabel ?? SOURCE_LABELS[ver.source]}
                         </span>
                       </TabsTrigger>
                     ))}

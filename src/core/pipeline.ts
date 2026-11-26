@@ -3,6 +3,7 @@ import hotspotsData from "@data/hotspots.json";
 import lexiconData from "@data/lexicon.json";
 import metaData from "@data/meta.json";
 import platformsData from "@data/platforms.json";
+import presetsData from "@data/presets.json";
 import { checkScriptRules } from "@/core/rules";
 import {
   generateScriptApi,
@@ -116,8 +117,10 @@ function summarizeRuleFailures(results: RuleResult[]): string {
 
 export async function runGenerationPipeline(
   hotspotId: string,
-  onProgress: (progress: PipelineProgress) => void
+  onProgress: (progress: PipelineProgress) => void,
+  options: { useFlawedPresetV1?: boolean } = {}
 ): Promise<void> {
+  const { useFlawedPresetV1 = false } = options;
   const store = useHotscriptStore.getState();
   const session = store.topics[hotspotId];
   if (!session) {
@@ -125,7 +128,10 @@ export async function runGenerationPipeline(
   }
 
   const hotspot = getHotspotOrThrow(hotspotId);
-  const platformRule = platforms[session.platform];
+  const effectivePlatform = useFlawedPresetV1
+    ? (presetsData.h10.v1 as Script).platform
+    : session.platform;
+  const platformRule = platforms[effectivePlatform];
   const targetLabel = `${hotspot.id} · ${hotspot.title}`;
 
   resetFallbackNotice();
@@ -141,7 +147,7 @@ export async function runGenerationPipeline(
   // Step 1: 热点简报
   steps = updateSteps(steps, "brief", "running");
   emit("正在整理热点简报与已核验证据快照…");
-  await sleep(260);
+  await sleep(240);
   steps = updateSteps(
     steps,
     "brief",
@@ -157,7 +163,7 @@ export async function runGenerationPipeline(
     (c) => c.confidentiality !== "unreleased"
   ).length;
   const blockedCount = game.cards.length - allowedCount;
-  await sleep(280);
+  await sleep(240);
   steps = updateSteps(
     steps,
     "retrieve",
@@ -172,43 +178,76 @@ export async function runGenerationPipeline(
   });
   emit("游戏设定检索完成");
 
-  // Step 3: 生成脚本
+  // Step 3: 生成脚本（或演示模式载入含错误预置初稿）
   steps = updateSteps(steps, "generate", "running");
   useHotscriptStore.getState().setScriptStatus(hotspotId, "generating");
-  emit(
-    `正在调用大模型生成 ${platformRule.name} v1 脚本（通常需要 10–30 秒，请稍候）…`
-  );
 
-  const genRes = await generateScriptApi({
-    hotspotId,
-    platform: session.platform,
-    direction: session.direction || undefined,
-  });
+  let currentScript: Script;
+  if (useFlawedPresetV1) {
+    emit("演示模式：跳过生成，载入含设定与合规错误的预置初稿 v1…");
+    await sleep(260);
+    const flawedV1 = presetsData.h10.v1 as Script;
+    currentScript = {
+      ...flawedV1,
+      id: makeUniqueScriptId(hotspotId, 1),
+      hotspotId,
+      platform: effectivePlatform,
+      version: 1,
+      source: "preset",
+      sourceLabel: "预置初稿（含错误）",
+    };
 
-  let currentScript: Script = {
-    ...genRes.script,
-    id: makeUniqueScriptId(hotspotId, 1),
-    hotspotId,
-    platform: session.platform,
-    version: 1,
-    source: genRes.usedFallback ? "preset" : "llm",
-  };
+    useHotscriptStore.getState().addScriptVersion(hotspotId, currentScript);
+    useHotscriptStore.getState().appendLog({
+      actor: "系统",
+      action: "载入预置初稿 v1（含错误）",
+      target: targetLabel,
+      detail: `演示拦截路径：载入预设含错误脚本「${currentScript.title}」，即将执行程序规则检查与真实模型评审修订。`,
+    });
 
-  useHotscriptStore.getState().addScriptVersion(hotspotId, currentScript);
-  useHotscriptStore.getState().appendLog({
-    actor: genRes.usedFallback ? "系统" : "模型",
-    action: genRes.usedFallback ? "生成脚本 v1（预置回退）" : "生成脚本 v1",
-    target: targetLabel,
-    detail: `标题「${currentScript.title}」，共 ${currentScript.shots.length} 个镜头。`,
-  });
+    steps = updateSteps(
+      steps,
+      "generate",
+      "done",
+      "预置初稿（含错误）"
+    );
+    emit("已载入含错误初稿 v1，开始程序规则拦截检查…");
+  } else {
+    emit(
+      `正在调用大模型生成 ${platformRule.name} v1 脚本（通常需要 10–30 秒，请稍候）…`
+    );
 
-  steps = updateSteps(
-    steps,
-    "generate",
-    "done",
-    genRes.usedFallback ? "预置 v1" : "模型生成 v1"
-  );
-  emit("v1 脚本已生成，进入程序规则检查…");
+    const genRes = await generateScriptApi({
+      hotspotId,
+      platform: effectivePlatform,
+      direction: session.direction || undefined,
+    });
+
+    currentScript = {
+      ...genRes.script,
+      id: makeUniqueScriptId(hotspotId, 1),
+      hotspotId,
+      platform: effectivePlatform,
+      version: 1,
+      source: genRes.usedFallback ? "preset" : "llm",
+    };
+
+    useHotscriptStore.getState().addScriptVersion(hotspotId, currentScript);
+    useHotscriptStore.getState().appendLog({
+      actor: genRes.usedFallback ? "系统" : "模型",
+      action: genRes.usedFallback ? "生成脚本 v1（预置回退）" : "生成脚本 v1",
+      target: targetLabel,
+      detail: `标题「${currentScript.title}」，共 ${currentScript.shots.length} 个镜头。`,
+    });
+
+    steps = updateSteps(
+      steps,
+      "generate",
+      "done",
+      genRes.usedFallback ? "预置 v1" : "模型生成 v1"
+    );
+    emit("v1 脚本已生成，进入程序规则检查…");
+  }
 
   // 循环：规则检查 + 模型评审 + 自动修订
   let revisionRound = 0;
@@ -322,7 +361,7 @@ export async function runGenerationPipeline(
       ...reviseRes.script,
       id: makeUniqueScriptId(hotspotId, nextVersion),
       hotspotId,
-      platform: session.platform,
+      platform: effectivePlatform,
       version: nextVersion,
       source: reviseRes.usedFallback ? "preset" : "revision",
     };

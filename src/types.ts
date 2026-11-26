@@ -166,6 +166,7 @@ export interface Script {
   platform: Platform;
   version: number;
   source: "llm" | "revision" | "human_return" | "preset";
+  sourceLabel?: string;
   title: string;
   coverText: string;
   hook: string;
