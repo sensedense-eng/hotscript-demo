@@ -226,25 +226,35 @@ export function HotspotsPage() {
         </div>
       </div>
 
-      {/* 顶部体验引导卡（高度 ≤ 72px，可关闭，重置演示后重新出现） */}
+      {/* 顶部体验引导卡（桌面端高度 ≤ 72px，移动端纵向排列，可关闭，重置演示后重新出现） */}
       {!guideDismissed && (
-        <div className="rounded-[12px] border border-[#99F6E4] bg-[#F0FDFA] px-5 py-3 max-h-[72px] flex items-center justify-between gap-4">
-          <div className="min-w-0 flex items-center gap-3 flex-wrap sm:flex-nowrap">
-            <span className="text-[14px] font-semibold text-[#0F766E] shrink-0">
-              三步体验完整流程
-            </span>
-            <span className="text-slate-300 hidden sm:inline">|</span>
-            <span className="text-[13px] text-slate-700 truncate">
+        <div className="rounded-[12px] border border-[#99F6E4] bg-[#F0FDFA] px-4 py-3 md:px-5 md:py-3 md:max-h-[72px] flex flex-col items-start gap-2.5 md:flex-row md:items-center md:justify-between md:gap-4">
+          <div className="min-w-0 w-full md:w-auto flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[14px] font-semibold text-[#0F766E] shrink-0">
+                三步体验完整流程
+              </span>
+              <button
+                type="button"
+                aria-label="关闭引导"
+                onClick={handleDismissGuide}
+                className="md:hidden h-7 w-7 rounded-lg inline-flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-[#CCFBF1]/60 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <span className="text-slate-300 hidden md:inline">|</span>
+            <span className="text-[13px] text-slate-700 md:truncate">
               确认橘猫热点为选题 → 生成脚本或演示拦截 → 终稿确认
             </span>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 w-full md:w-auto">
             <Button
               type="button"
               size="sm"
               onClick={() => setActiveHotspotId("h10")}
-              className="h-8 px-3.5 text-[13px] bg-[#0F766E] hover:bg-[#115E59] text-white gap-1"
+              className="h-8 px-3.5 text-[13px] bg-[#0F766E] hover:bg-[#115E59] text-white gap-1 w-full md:w-auto"
             >
               <span>从这里开始</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -253,7 +263,7 @@ export function HotspotsPage() {
               type="button"
               aria-label="关闭引导"
               onClick={handleDismissGuide}
-              className="h-8 w-8 rounded-lg inline-flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-[#CCFBF1]/60 transition-colors"
+              className="hidden md:inline-flex h-8 w-8 rounded-lg items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-[#CCFBF1]/60 transition-colors"
             >
               <X className="h-4 w-4" />
             </button>
@@ -261,8 +271,8 @@ export function HotspotsPage() {
         </div>
       )}
 
-      {/* 顶部 4 个统计卡 */}
-      <div className="grid grid-cols-4 gap-4">
+      {/* 顶部 4 个统计卡（移动端 2×2，桌面端 4 列） */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <Card className="rounded-[12px] border border-[#E2E8F0] bg-white px-5 py-4 shadow-sm">
           <div className="text-[13px] font-medium text-slate-500">今日热点</div>
           <div className="mt-2 flex items-baseline gap-2">
@@ -312,11 +322,12 @@ export function HotspotsPage() {
 
       {/* 筛选栏：状态 Tabs + 平台多选 */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as FilterTab)}
-        >
-          <TabsList className="bg-white border border-[#E2E8F0] p-1 h-10 rounded-[10px]">
+        <div className="max-w-full overflow-x-auto">
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as FilterTab)}
+          >
+            <TabsList className="bg-white border border-[#E2E8F0] p-1 h-10 rounded-[10px]">
             <TabsTrigger
               value="all"
               className="text-[13px] px-3 data-[state=active]:bg-[#F0FDFA] data-[state=active]:text-[#0F766E] data-[state=active]:shadow-none rounded-[7px]"
@@ -364,6 +375,7 @@ export function HotspotsPage() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
+        </div>
 
         {/* 平台多选（只显示至少有一条热点的平台） */}
         <div className="flex items-center gap-1.5 flex-wrap">
@@ -401,8 +413,8 @@ export function HotspotsPage() {
 
       {/* 热点列表卡片容器 */}
       <div className="rounded-[12px] border border-[#E2E8F0] bg-white shadow-sm overflow-hidden">
-        {/* 表头 */}
-        <div className="grid grid-cols-[minmax(260px,1fr)_140px_132px_120px_112px_20px] items-center gap-4 px-5 py-3 bg-slate-50/80 border-b border-[#E2E8F0] text-[13px] font-medium text-slate-500">
+        {/* 桌面端表头（移动端隐藏） */}
+        <div className="hidden md:grid grid-cols-[minmax(260px,1fr)_140px_132px_120px_112px_20px] items-center gap-4 px-5 py-3 bg-slate-50/80 border-b border-[#E2E8F0] text-[13px] font-medium text-slate-500">
           <div>热点事件与来源平台</div>
           <div>核验状态 / 阶段</div>
           <div>证据与时效</div>
@@ -438,10 +450,151 @@ export function HotspotsPage() {
                     }
                   }}
                   className={cn(
-                    "grid grid-cols-[minmax(260px,1fr)_140px_132px_120px_112px_20px] items-center gap-4 px-5 py-4 min-h-[82px] cursor-pointer transition-colors duration-150 hover:bg-slate-50/90 focus:outline-none focus-visible:bg-[#F0FDFA]/50",
+                    "cursor-pointer transition-colors duration-150 hover:bg-slate-50/90 focus:outline-none focus-visible:bg-[#F0FDFA]/50",
                     isMuted && "opacity-80"
                   )}
                 >
+                  {/* 移动端纵向卡片（< 768px） */}
+                  <div className="flex flex-col gap-3 p-4 md:hidden">
+                    {/* 标题 + 平台 */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="text-[16px] font-medium text-slate-900 leading-snug">
+                          {hotspot.title}
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-slate-400 shrink-0 mt-1" />
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {hotspot.platforms.map((p) => (
+                          <Badge
+                            key={p}
+                            variant="outline"
+                            className="text-[12px] font-normal px-2 py-0 h-5 rounded-md bg-slate-50 text-slate-600 border-slate-200"
+                          >
+                            {meta.platformLabels[p]}
+                          </Badge>
+                        ))}
+                        <span className="text-[13px] text-slate-400 ml-1">
+                          {hotspot.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 状态 Badge + 已选题快捷按钮 */}
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <div className="flex items-center gap-1.5">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "text-[12px] font-medium px-2 py-0.5 rounded-md border",
+                            statusInfo.className
+                          )}
+                        >
+                          {statusInfo.label}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "text-[12px] font-normal px-2 py-0 h-5 rounded-md border",
+                            LIFECYCLE_BADGE_CLASS
+                          )}
+                        >
+                          {meta.lifecycleLabels[hotspot.lifecycle]}
+                        </Badge>
+                      </div>
+                      {status === "selected" && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/topics/${hotspot.id}`);
+                          }}
+                          className="h-7 px-2.5 text-[13px] font-medium border-[#0F766E]/40 text-[#0F766E] hover:bg-[#F0FDFA] hover:text-[#0F766E] shrink-0 gap-1"
+                        >
+                          <FileText className="h-3.5 w-3.5" />
+                          <span>查看脚本</span>
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* 证据与时效 */}
+                    <div className="flex items-center gap-4 text-[13px] tabular-nums">
+                      <div className="flex items-center gap-1.5 text-slate-700">
+                        {hotspot.verification.status === "verified" ? (
+                          <ShieldCheck className="h-3.5 w-3.5 text-[#059669] shrink-0" />
+                        ) : hotspot.verification.status === "pending" ? (
+                          <ShieldAlert className="h-3.5 w-3.5 text-[#D97706] shrink-0" />
+                        ) : (
+                          <Ban className="h-3.5 w-3.5 text-[#E11D48] shrink-0" />
+                        )}
+                        <span>{hotspot.evidence.length} 个来源</span>
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center gap-1.5",
+                          remainingText === "已过期" || remainingText === "不跟进"
+                            ? "text-slate-400"
+                            : "text-slate-500"
+                        )}
+                      >
+                        <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                        <span>{remainingText}</span>
+                      </div>
+                    </div>
+
+                    {/* 分数（隐藏 sparkline） */}
+                    {status === "blocked" ? (
+                      <div className="flex items-center gap-3">
+                        <span className="text-[13px] text-slate-500 shrink-0">
+                          适配总分
+                        </span>
+                        <span className="text-[18px] font-semibold text-slate-400 tabular-nums leading-none">
+                          —
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <span className="text-[13px] text-slate-500 shrink-0">
+                          适配总分
+                        </span>
+                        <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className={cn(
+                              "h-full rounded-full",
+                              isMuted
+                                ? "bg-slate-300"
+                                : score >= meta.scoring.threshold
+                                  ? "bg-[#0F766E]"
+                                  : "bg-slate-400"
+                            )}
+                            style={{
+                              width: `${Math.min(100, Math.max(0, score))}%`,
+                            }}
+                          />
+                        </div>
+                        <span
+                          className={cn(
+                            "text-[18px] font-semibold tabular-nums leading-none shrink-0",
+                            isMuted
+                              ? "text-slate-400"
+                              : score >= meta.scoring.threshold
+                                ? "text-slate-900"
+                                : "text-slate-600"
+                          )}
+                        >
+                          {score}
+                          <span className="text-[13px] font-normal text-slate-400 ml-0.5">
+                            /100
+                          </span>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 桌面端 6 列布局（≥ 768px，与修改前完全一致） */}
+                  <div className="hidden md:grid grid-cols-[minmax(260px,1fr)_140px_132px_120px_112px_20px] items-center gap-4 px-5 py-4 min-h-[82px]">
                   {/* 标题 + 关联平台徽标 */}
                   <div className="min-w-0 space-y-2">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -586,6 +739,7 @@ export function HotspotsPage() {
                   {/* 详情指示箭头 */}
                   <div className="flex justify-end text-slate-400">
                     <ChevronRight className="h-4 w-4" />
+                  </div>
                   </div>
                 </div>
               );

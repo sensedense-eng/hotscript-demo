@@ -10,6 +10,7 @@ import {
   ChevronsUpDown,
   UtensilsCrossed,
   Clock,
+  Menu,
 } from "lucide-react";
 import game from "@data/game.json";
 import meta from "@data/meta.json";
@@ -31,6 +32,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const NAV_ITEMS = [
   { to: "/", label: "热点工作台", icon: Flame, end: true },
@@ -55,6 +62,7 @@ function formatDemoClock(iso: string): string {
 export function Layout() {
   const [modelOnline, setModelOnline] = useState<boolean>(false);
   const [resetOpen, setResetOpen] = useState<boolean>(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState<boolean>(false);
 
   useEffect(() => {
     let active = true;
@@ -82,125 +90,160 @@ export function Layout() {
     window.location.href = "/";
   };
 
+  const renderSidebarBody = (onNavigate?: () => void) => (
+    <>
+      {/* 产品名 + 游戏切换器 */}
+      <div className="p-4 space-y-3">
+        <div className="flex items-center gap-2.5 px-1">
+          <div className="h-7 w-7 rounded-lg bg-[#0F766E] text-white flex items-center justify-center shrink-0">
+            <UtensilsCrossed className="h-4 w-4" />
+          </div>
+          <span className="text-[15px] font-semibold tracking-tight text-slate-900">
+            热点脚本工作台
+          </span>
+        </div>
+
+        <div
+          className="w-full rounded-[12px] border border-slate-200 bg-slate-50/70 px-3 py-2 flex items-center justify-between cursor-default select-none"
+          title="当前演示项目"
+        >
+          <div className="min-w-0">
+            <div className="text-[14px] font-medium text-slate-900 truncate">
+              云屿食堂
+            </div>
+            <div className="text-[13px] text-slate-500 tabular-nums">
+              v{meta.gameVersion}
+            </div>
+          </div>
+          <ChevronsUpDown className="h-4 w-4 text-slate-400 shrink-0" />
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* 主导航 */}
+      <nav className="flex-1 px-3 py-4 space-y-1">
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              onClick={onNavigate}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[14px] font-medium transition-colors duration-150",
+                  isActive
+                    ? "bg-[#F0FDFA] text-[#0F766E]"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                )
+              }
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              <span>{item.label}</span>
+            </NavLink>
+          );
+        })}
+      </nav>
+
+      <Separator />
+
+      {/* 底部重置演示 */}
+      <div className="p-3">
+        <Button
+          variant="ghost"
+          onClick={() => {
+            onNavigate?.();
+            setResetOpen(true);
+          }}
+          className="w-full justify-start gap-2 text-[14px] text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+        >
+          <RotateCcw className="h-4 w-4" />
+          <span>重置演示</span>
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex">
-      {/* 左侧固定侧边栏 */}
-      <aside className="fixed inset-y-0 left-0 z-30 w-[232px] bg-white border-r border-slate-200 flex flex-col">
-        {/* 产品名 + 游戏切换器 */}
-        <div className="p-4 space-y-3">
-          <div className="flex items-center gap-2.5 px-1">
-            <div className="h-7 w-7 rounded-lg bg-[#0F766E] text-white flex items-center justify-center shrink-0">
-              <UtensilsCrossed className="h-4 w-4" />
-            </div>
-            <span className="text-[15px] font-semibold tracking-tight text-slate-900">
-              热点脚本工作台
-            </span>
-          </div>
-
-          <div
-            className="w-full rounded-[12px] border border-slate-200 bg-slate-50/70 px-3 py-2 flex items-center justify-between cursor-default select-none"
-            title="当前演示项目"
-          >
-            <div className="min-w-0">
-              <div className="text-[14px] font-medium text-slate-900 truncate">
-                云屿食堂
-              </div>
-              <div className="text-[13px] text-slate-500 tabular-nums">
-                v{meta.gameVersion}
-              </div>
-            </div>
-            <ChevronsUpDown className="h-4 w-4 text-slate-400 shrink-0" />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* 主导航 */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  cn(
-                    "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[14px] font-medium transition-colors duration-150",
-                    isActive
-                      ? "bg-[#F0FDFA] text-[#0F766E]"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                  )
-                }
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
-
-        <Separator />
-
-        {/* 底部重置演示 */}
-        <div className="p-3">
-          <Dialog open={resetOpen} onOpenChange={setResetOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-2 text-[14px] text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              >
-                <RotateCcw className="h-4 w-4" />
-                <span>重置演示</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[400px]">
-              <DialogHeader>
-                <DialogTitle>重置演示数据？</DialogTitle>
-                <DialogDescription className="text-[14px] text-slate-600">
-                  将清空本地保存的选题、脚本与操作日志，恢复为初始演示状态。
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="gap-2 sm:gap-0">
-                <Button
-                  variant="outline"
-                  onClick={() => setResetOpen(false)}
-                >
-                  取消
-                </Button>
-                <Button
-                  onClick={handleResetDemo}
-                  className="bg-[#0F766E] hover:bg-[#115E59] text-white"
-                >
-                  确认重置
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
+      {/* 左侧固定侧边栏（桌面端显示，移动端隐藏） */}
+      <aside className="hidden md:flex fixed inset-y-0 left-0 z-30 w-[232px] bg-white border-r border-slate-200 flex-col">
+        {renderSidebarBody()}
       </aside>
 
+      {/* 重置演示确认弹窗（桌面与移动端共用） */}
+      <Dialog open={resetOpen} onOpenChange={setResetOpen}>
+        <DialogTrigger asChild>
+          <span className="hidden" />
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>重置演示数据？</DialogTitle>
+            <DialogDescription className="text-[14px] text-slate-600">
+              将清空本地保存的选题、脚本与操作日志，恢复为初始演示状态。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setResetOpen(false)}>
+              取消
+            </Button>
+            <Button
+              onClick={handleResetDemo}
+              className="bg-[#0F766E] hover:bg-[#115E59] text-white"
+            >
+              确认重置
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* 右侧主区域 */}
-      <div className="flex-1 pl-[232px] min-w-0 flex flex-col">
+      <div className="flex-1 md:pl-[232px] min-w-0 flex flex-col">
         {/* 顶栏 */}
-        <header className="sticky top-0 z-20 h-14 bg-white/95 border-b border-slate-200 px-6 flex items-center justify-between gap-4">
-          <div className="text-[14px] font-medium text-slate-700 truncate">
-            {TOPBAR_CONTEXT_LABEL}
+        <header className="sticky top-0 z-20 h-14 bg-white/95 border-b border-slate-200 px-4 md:px-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 min-w-0">
+            {/* 移动端菜单按钮 */}
+            <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="打开导航菜单"
+                  className="md:hidden h-9 w-9 text-slate-700 hover:bg-slate-100"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-[256px] p-0 flex flex-col bg-white"
+              >
+                <SheetTitle className="sr-only">导航菜单</SheetTitle>
+                {renderSidebarBody(() => setMobileNavOpen(false))}
+              </SheetContent>
+            </Sheet>
+
+            <div className="hidden md:block text-[14px] font-medium text-slate-700 truncate">
+              {TOPBAR_CONTEXT_LABEL}
+            </div>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <div className="flex items-center gap-1.5 text-[13px] text-slate-600 tabular-nums">
+            <div className="hidden md:flex items-center gap-1.5 text-[13px] text-slate-600 tabular-nums">
               <Clock className="h-3.5 w-3.5 text-slate-400" />
               <span>{formatDemoClock(meta.demoNow)}</span>
             </div>
 
-            <Separator orientation="vertical" className="h-4" />
+            <Separator orientation="vertical" className="hidden md:block h-4" />
 
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge
                   variant="secondary"
-                  className="text-[12px] font-medium bg-slate-100 text-slate-700 hover:bg-slate-200/80 cursor-default"
+                  className="hidden md:inline-flex text-[12px] font-medium bg-slate-100 text-slate-700 hover:bg-slate-200/80 cursor-default"
                 >
                   演示环境
                 </Badge>
@@ -225,7 +268,7 @@ export function Layout() {
         </header>
 
         {/* 内容区（最大宽 1280px 居中） */}
-        <main className="flex-1 w-full max-w-[1280px] mx-auto px-6 py-6">
+        <main className="flex-1 w-full max-w-[1280px] mx-auto px-4 py-4 md:px-6 md:py-6">
           <Suspense
             fallback={
               <div className="space-y-5 animate-pulse">

@@ -229,7 +229,7 @@ export function HotspotDetailSheet({
         if (!open) onClose();
       }}
     >
-      <SheetContent className="w-[640px] sm:max-w-[640px] p-0 gap-0 flex flex-col bg-white">
+      <SheetContent className="w-full max-w-[100vw] md:w-[640px] sm:max-w-[640px] p-0 gap-0 flex flex-col bg-white">
         {/* 1. 顶部：标题 + 状态 + 一句摘要 */}
         <SheetHeader className="px-6 pt-6 pb-4 border-b border-slate-200 shrink-0 text-left space-y-2.5">
           <div className="flex items-center gap-2 flex-wrap pr-8">

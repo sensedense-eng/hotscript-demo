@@ -128,7 +128,7 @@ const SCORE_LABELS: Array<{
 }> = [
   { key: "consistency", label: "设定一致性" },
   { key: "persona", label: "角色人设" },
-  { key: "hook", label: "钩子吸引力" },
+  { key: "hook", label: "开头吸引力" },
   { key: "platformFit", label: "平台适配" },
 ];
 
@@ -408,9 +408,10 @@ export function TopicDetailPage() {
         </div>
       </div>
 
-      {/* A. 生成流水线（顶部横向步骤条） */}
+      {/* A. 生成流水线（顶部横向步骤条；移动端可横向滚动） */}
       <Card className="rounded-[12px] border border-[#E2E8F0] bg-white p-4 shadow-sm space-y-3">
-        <div className="grid grid-cols-7 gap-2">
+        <div className="overflow-x-auto pb-1 md:pb-0">
+          <div className="grid grid-cols-7 gap-2 min-w-[760px] md:min-w-0">
           {displaySteps.map((step, idx) => {
             const isStepRunning = step.status === "running";
             const isStepDone = step.status === "done";
@@ -475,6 +476,7 @@ export function TopicDetailPage() {
               </div>
             );
           })}
+          </div>
         </div>
 
         {/* 实时动态进度条与说明 */}
@@ -622,9 +624,9 @@ export function TopicDetailPage() {
                   </div>
                 </div>
 
-                {/* 分镜表格 */}
-                <div className="rounded-[10px] border border-slate-200 overflow-hidden">
-                  <Table>
+                {/* 分镜表格（移动端外层可横向滚动） */}
+                <div className="rounded-[10px] border border-slate-200 overflow-x-auto">
+                  <Table className="min-w-[560px] md:min-w-0">
                     <TableHeader>
                       <TableRow className="bg-slate-50/80 hover:bg-slate-50/80">
                         <TableHead className="w-[78px] text-[13px] font-medium text-slate-500">
